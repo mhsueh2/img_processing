@@ -1,0 +1,27 @@
+import pandas as pd
+import numpy as np
+
+data = np.stack((x.T, y.T), axis=-1)
+# centering the data i.e, mean = (0, 0)
+data = data - np.mean(data, axis=0)
+
+
+def unit_vector(angle):
+    angle_rad = np.deg2rad(angle)
+    return np.array([[np.cos(angle_rad)], [np.sin(angle_rad)]])
+
+
+def draw_line(ang, rng=[-50, 50], color='red'):
+    m = np.tan(np.deg2rad(ang))
+    x = np.arange(rng[0], rng[1])
+    y = x * m
+    plt.plot(x, y, '-', linewidth=1.5, color=color)
+
+
+max_var_ang = np.argmax([np.var(np.dot(data, unit_vector(i))) for i in range(180)])
+min_var_ang = np.argmin([np.var(np.dot(data, unit_vector(i))) for i in range(180)])
+
+plt.plot(data[:, 0], data[:, 1], 'o', color='green', markersize=5)
+draw_line(max_var_ang)
+# draw_line(min_var_ang, rng=[-30, 30], color='blue')
+plt.axis([-50, 40, -90, 90])
